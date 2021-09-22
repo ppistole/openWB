@@ -6,8 +6,11 @@ output=$(curl --connect-timeout $evsewifitimeoutlp2 -s http://$evsewifiiplp2/get
 if ! [ -z "$output" ]; then
 	watt=$(echo $output | jq '.list[] | .actualPower')
 	lla1=$(echo $output | jq '.list[] | .currentP1')
+	lla1=$(echo "scale=0;$lla1 / 1" |bc)
 	lla2=$(echo $output | jq '.list[] | .currentP2')
+	lla2=$(echo "scale=0;$lla1 / 1" |bc)
 	lla3=$(echo $output | jq '.list[] | .currentP3')
+	lla3=$(echo "scale=0;$lla1 / 1" |bc)
 	llv1=$(echo $output | jq '.list[] | .voltageP1')
 	llv2=$(echo $output | jq '.list[] | .voltageP2')
 	llv3=$(echo $output | jq '.list[] | .voltageP3')
@@ -18,13 +21,13 @@ if ! [ -z "$output" ]; then
 	if [[ $watt =~ $re ]] ; then
 		echo $watt > /var/www/html/openWB/ramdisk/llaktuells1
 	fi
-	if [[ $lla1 =~ $re ]] ; then
+	if [[ $lla1 =~ $rekwh ]] ; then
 		echo $lla1 > /var/www/html/openWB/ramdisk/llas11
 	fi
-	if [[ $lla2 =~ $re ]] ; then
+	if [[ $lla2 =~ $rekwh ]] ; then
 		echo $lla2 > /var/www/html/openWB/ramdisk/llas12
 	fi
-	if [[ $lla3 =~ $re ]] ; then
+	if [[ $lla3 =~ $rekwh ]] ; then
 		echo $lla3 > /var/www/html/openWB/ramdisk/llas13
 	fi
 	if [[ $llv1 =~ $re ]] ; then
